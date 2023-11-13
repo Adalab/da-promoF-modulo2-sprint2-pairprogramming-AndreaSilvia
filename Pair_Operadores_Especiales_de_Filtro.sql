@@ -56,3 +56,8 @@ WHERE `description` LIKE '%sweet%';
 /* 7. Extraed todos los nombres y apellidos de los clientes y empleados que tenemos en la BBDD:
 💡 Pista 💡 ¿Ambas tablas tienen las mismas columnas para nombre y apellido? Tendremos que combinar dos columnas usando concat para unir dos 
 columnas.*/
+SELECT CONCAT(`first_name`,' ',`last_name`) AS `nombre`
+	FROM `employees` AS `e`
+UNION 
+SELECT `contact_name` AS `contactoCliente`
+FROM `customers` AS `clientes`
