@@ -1,19 +1,72 @@
-USE `northwind`
+USE `northwind`;
 /* 1. Extraer en una CTE todos los nombres de las compañias y los id de los clientes.
 Para empezar nos han mandado hacer una CTE muy sencilla el id del cliente y el nombre de la compañia de la tabla Customers.*/
 
+-- primero llamamos a la query que nos llame a id_cliente y nombreCompañia
+WITH `nombre_Compañia` AS(
+	SELECT `company_name` AS `nombreCompañia`, `customer_id` AS `id_cliente` 
+	FROM `customers`)
+SELECT * 
+	FROM `nombre_Compañia`;    
+
 /* 2. Selecciona solo los de que vengan de "Germany"
 Ampliemos un poco la query anterior. En este caso, queremos un resultado similar al anterior, pero solo queremos los que pertezcan a "Germany".*/
+
+WITH `nombre_Compañia` AS(
+	SELECT `company_name` AS `NombreCompañia`, `customer_id` AS `id_cliente` 
+	FROM `customers`
+    WHERE `country` = "Germany")
+SELECT * 
+	FROM `nombre_Compañia`;
 
 /* 3. Extraed el id de las facturas y su fecha de cada cliente.
 En este caso queremos extraer todas las facturas que se han emitido a un cliente, su fecha la compañia a la que pertenece.
 📌 NOTA En este caso tendremos columnas con elementos repetidos(CustomerID, y Company Name).*/
 
+WITH `factura_fecha` AS (
+SELECT `o`.`customer_id`AS `CustomerID`,`o`.`order_id` AS `OrderID`, `o`.`order_date` AS `Fechas_Pedido`, `c`.`company_name` AS `CompanyName`
+	FROM `orders` AS `o`
+    NATURAL JOIN  `customers` AS `c`)
+SELECT *
+		FROM `factura_fecha`;
+    
+    
 /* 4. Contad el número de facturas por cliente
 Mejoremos la query anterior. En este caso queremos saber el número de facturas emitidas por cada cliente.*/
 
+WITH `NumeroFacturas` AS (
+SELECT `o`.`customer_id`AS `CustomerID`, `c`.`company_name` AS `CompanyName`, COUNT(`o`.`customer_id`) AS `NumeroFacturas`
+	FROM `orders` AS `o`
+    NATURAL JOIN  `customers` AS `c`
+    GROUP BY `c`.`company_name`,
+    `o`.`customer_id`)
+SELECT *
+		FROM `NumeroFacturas`;
+
+
 /* 5. Cuál la cantidad media pedida de todos los productos ProductID.
 Necesitaréis extraer la suma de las cantidades por cada producto y calcular la media.*/
+-- tabla order_details
+-- sumamos la cantidad total de pedidos para el Denominador de la Media
+-- SUM(`quantity`)
+-- para cada product_id --> `quantity` determinada
+-- `product_id` ?¿ `quantity`
+
+SELECT `p`.`product_name` AS `NombreProducto`, CTE AS `Media`
+	FROM `productos` AS `p`
+    NATURAL JOIN `order_details` as `o`;
+    
+    
+WITH AVG(SELECT SUM(`quantity`)
+		FROM `order_details`
+        GROUP BY `product_id`)
+        FROM `order_details`
+    
+
+
+
+
+
 
 /* BONUS: Estos ejercicios no es obligatorio realizarlos. Los podéis hacer más adelante para poder practicar las CTE´s.*/
 
