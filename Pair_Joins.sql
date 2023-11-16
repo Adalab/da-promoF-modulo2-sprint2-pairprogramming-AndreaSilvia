@@ -1,4 +1,4 @@
-USE `northwind`
+USE `northwind`;
 --  Pair programming Union Tablas (Joins)
 
 -- 1 
