@@ -57,13 +57,33 @@ SELECT `p`.`product_name` AS `NombreProducto`, CTE AS `Media`
     NATURAL JOIN `order_details` as `o`;
     
     
-WITH AVG(SELECT SUM(`quantity`)
-		FROM `order_details`
-        GROUP BY `product_id`)
-        FROM `order_details`
+WITH `numerador` AS (SELECT SUM(`quantity`)AS `SUMA_DATOS`
+	FROM `order_details`
+	GROUP BY `product_id`)
+SELECT *
+FROM (
+	WITH `denominador` AS (SELECT SUM(`quantity`) AS `SUMA_TOTAL`   
+	FROM `order_details`)
+SELECT *
+FROM (/*`denominador`
+JOIN `numerador`*/ 
+	WITH `media`AS (SELECT `SUMA_DATOS`/`SUMA_TOTAL` AS `MEDIA`
+    FROM `denominador`
+    JOIN `numerador`) AS `operacion`
     
+    SELECT *
+    FROM `media`
+		
 
 
+SELECT `SUMA_DATOS`/`SUMA_TOTAL`
+FROM `ALIAS`;
+
+SELECT `o3`.`product_id`,(SELECT SUM(`o1`.`quantity`)
+	FROM `order_details` AS `o1`
+	GROUP BY `o1`.`product_id`)/(SELECT SUM(`o2`.`quantity`) FROM `order_details` AS `o2`)
+FROM `order_details` AS `o3`
+GROUP BY `o3`.`product_id`
 
 
 
