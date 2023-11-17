@@ -22,11 +22,12 @@ WHERE `ship_country`='UK';
 Después de analizar los resultados de alguna de nuestras consultas anteriores, desde el departamento de Ventas quieren conocer qué productos 
 en concreto se venden por encima del precio medio para todos los productos de la empresa, ya que sospechan que dicho número es demasiado elevado. 
 También quieren que ordenemos los resultados por su precio de mayor a menor.*/
-
-SELECT `product_id`,`unit_price`
+SELECT AVG(`unit_price`)
+FROM `products`;
+SELECT `product_name`
 FROM `products`
-GROUP BY `product_id`
-HAVING AVG(`unit_price`)<`unit_price`;
+WHERE `unit_price`>=28.866363636363637
+ORDER BY `unit_price` DESC;
 
 /* 5. Qué productos se han descontinuado:
 De cara a estudiar el histórico de la empresa nos piden una consulta para conocer el número de productos que se han descontinuado. El atributo
@@ -56,7 +57,7 @@ muchos pedidos cuya fecha de envío estaba vacía, por lo que tenemos que mejora
 resultados según el ID de empleado para que la visualización sea más sencilla.*/
 SELECT COUNT(`order_id`) AS 'cantidad_pedidos' ,MAX(`freight`) AS 'carga_maxima',`employee_id`
 FROM `orders`
-WHERE `shipped_date` < '1000-01-01 00:00:00'
+WHERE `shipped_date` IS NOT NULL
 GROUP BY `employee_id`
 ORDER BY `employee_id` DESC;
 
@@ -73,7 +74,7 @@ La consulta anterior nos muestra el número de pedidos para cada día concreto, 
  anterior para que agrupe los pedidos por cada mes concreto de cada año.*/
 SELECT COUNT(`order_id`) AS 'cantidad_pedidos', MONTH(`order_date`) AS 'mes', YEAR(`order_date`) AS 'año'
 FROM `orders`
-GROUP BY `order_date`;
+GROUP BY MONTH(`order_date`), YEAR(`order_date`);
 
 /*11. Seleccionad las ciudades con 4 o más empleadas:
 Desde recursos humanos nos piden seleccionar los nombres de las ciudades con 4 o más empleadas de cara a estudiar la apertura de nuevas oficinas.*/
