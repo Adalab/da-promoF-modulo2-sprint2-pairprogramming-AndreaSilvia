@@ -38,14 +38,7 @@ HAVING `country` NOT IN (
 /* 5. Extraer los clientes que compraron mas de 20 articulos "Grandma's Boysenberry Spread"
 Extraed el OrderId y el nombre del cliente que pidieron más de 20 artículos del producto "Grandma's Boysenberry Spread" (ProductID 6) en un solo
  pedido.*/
-SELECT `order_id` AS 'OrderID' 
-FROM `order_details`
-WHERE `quantity`>=20
-AND `product_id`=(
-	SELECT `product_id`
-    FROM `products`
-    WHERE `product_name`="Grandma's Boysenberry Spread");
-    
+
 SELECT `order_id` AS 'OrderID' , `customer_id`
 FROM `orders`
 WHERE `order_id` IN (
@@ -61,6 +54,28 @@ WHERE `order_id` IN (
  /* 6. Extraed los 10 productos más caros
 Nos siguen pidiendo más queries correlacionadas. En este caso queremos saber cuáles son los 10 productos más caros.*/
 
+SELECT `product_name`AS `10 Most expensive products`, `unit_price` AS `UnitPrice`
+FROM `products`
+ORDER BY `unit_price` DESC
+LIMIT 10;
+
+-- Como estaba todo en la misma tabla, no hemos visto necesario hacer una subconsulta en este caso. 
+-- Contemplamos que podríamos haberlo sacado también de la tabla `order_details`.
+
 /* BONUS:
 7. Qué producto es más popular
 Extraed cuál es el producto que más ha sido comprado y la cantidad que se compró.*/
+
+SELECT `product_name`AS `ProductName`, MAX(`suma`) 
+  FROM `products`
+WHERE COUNT(`product_id` IN (
+SELECT SUM(`quantity`) AS `suma`
+FROM `order_details`
+GROUP BY `product_id`;
+
+-- repasar indiv
+
+
+
+
+

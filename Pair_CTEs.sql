@@ -56,23 +56,23 @@ SELECT `p`.`product_name` AS `NombreProducto`, CTE AS `Media`
 	FROM `productos` AS `p`
     NATURAL JOIN `order_details` as `o`;
     
-    
 WITH `numerador` AS (SELECT SUM(`quantity`)AS `SUMA_DATOS`
-	FROM `order_details`
+	FROM `order_details` AS `n`
 	GROUP BY `product_id`)
 SELECT *
+
 FROM (
-	WITH `denominador` AS (SELECT SUM(`quantity`) AS `SUMA_TOTAL`   
-	FROM `order_details`)
+	WITH `denominador` AS (SELECT COUNT(DISTINCT `product_id`) AS `SUMA_TOTAL`   
+	FROM `order_details` AS `d`)
 SELECT *
-FROM (/*`denominador`
-JOIN `numerador`*/ 
+FROM (
 	WITH `media`AS (SELECT `SUMA_DATOS`/`SUMA_TOTAL` AS `MEDIA`
     FROM `denominador`
-    JOIN `numerador`) AS `operacion`
+    JOIN `numerador` AS `operacion`)
     
     SELECT *
-    FROM `media`
+    FROM `denominador`
+    JOIN `numerador` ON `d`.`order_id` = `n`.`order_id`) AS `media`
 		
 
 
@@ -85,7 +85,7 @@ SELECT `o3`.`product_id`,(SELECT SUM(`o1`.`quantity`)
 FROM `order_details` AS `o3`
 GROUP BY `o3`.`product_id`
 
-
+-- TRASTEAR INDIVIDUAL 
 
 
 /* BONUS: Estos ejercicios no es obligatorio realizarlos. Los podéis hacer más adelante para poder practicar las CTE´s.*/
