@@ -15,7 +15,12 @@ WHERE `order_date`= (SELECT MAX(`order_date`)
 /* 2. Extraed el precio unitario máximo (unit_price) de cada producto vendido.
 Supongamos que ahora nuestro jefe quiere un informe de los productos vendidos y su precio unitario. De nuevo lo tendréis que hacer con queries
  correlacionadas.*/
- 
+ SELECT `product_id` AS 'IdProduct', MAX(`unit_price`) AS 'PrecioMáximo'
+ FROM `products` AS `p`
+ GROUP BY `P`.`product_id`
+ HAVING MAX(`unit_price`)= (SELECT MAX(`unit_price`)
+ FROM `order_details` AS `o`
+ WHERE `p`.`product_id`=`o`.`product_id`);
  /* 3. Extraed información de los productos "Beverages"
 En este caso nuestro jefe nos pide que le devolvamos toda la información necesaria para identificar un tipo de producto. En concreto, tienen especial
  interés por los productos con categoría "Beverages". Devuelve el ID del producto, el nombre del producto y su ID de categoría.*/
@@ -38,7 +43,6 @@ HAVING `country` NOT IN (
 /* 5. Extraer los clientes que compraron mas de 20 articulos "Grandma's Boysenberry Spread"
 Extraed el OrderId y el nombre del cliente que pidieron más de 20 artículos del producto "Grandma's Boysenberry Spread" (ProductID 6) en un solo
  pedido.*/
-
 SELECT `order_id` AS 'OrderID' , `customer_id`
 FROM `orders`
 WHERE `order_id` IN (
@@ -66,16 +70,14 @@ LIMIT 10;
 7. Qué producto es más popular
 Extraed cuál es el producto que más ha sido comprado y la cantidad que se compró.*/
 
-SELECT `product_name`AS `ProductName`, MAX(`suma`) 
-  FROM `products`
-WHERE COUNT(`product_id` IN (
-SELECT SUM(`quantity`) AS `suma`
+SELECT `product_name`AS `ProductName`, `maximo`.`suma`
+FROM `products`,
+(SELECT `product_id`, SUM(`quantity`) AS `CantidadTotal`
 FROM `order_details`
-GROUP BY `product_id`;
-
--- repasar indiv
-
-
+GROUP BY `product_id`) AS `maximo`
+WHERE `maximo`.`product_id`=`products`.`product_id`
+ORDER BY `maximo`.`suma` DESC
+LIMIT 1
 
 
 
